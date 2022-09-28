@@ -1,0 +1,18 @@
+{
+  "name": "koel_cy",
+  "version": "1.0.0",
+  "description": "This is project for practice purpose",
+  "main": "index.js",
+  "scripts": {
+    "cy": "npx cypress run",
+    "cy-test": "npx cypress run --spec cypress/integration/pageTests/LoginPageTest.js"
+  },
+  "author": "Dzmitry Razhkou",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "cypress": "^10.8.0",
+    "cypress-iframe": "^1.0.1",
+    "mochawesome": "^7.1.3"
+  }
+}
