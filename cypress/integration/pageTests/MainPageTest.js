@@ -8,8 +8,9 @@ describe("Main Page Features", () => {
   let mainPage;
   let receivedPlaylistName;
   let updatedPlayList;
+  let deletedPlayList;
 
-  before(() => {
+  beforeEach(() => {
     cy.launch();
     cy.fixture("example").then((data) => {
       koelData = data;
@@ -17,7 +18,9 @@ describe("Main Page Features", () => {
     });
   });
 
-  after(() => {});
+  afterEach(() => {
+    cy.tearDown();
+  });
 
   it("Create A New PlayList Test", () => {
     loginPage = new LoginPage();
@@ -36,7 +39,6 @@ describe("Main Page Features", () => {
     receivedPlaylistName = mainPage.createNewPlayList(playListName);
     mainPage.successCreatedGreenPopUp(greenCreatedPopUpMsg, playListName);
     cy.log(" =====> " + receivedPlaylistName + " <===== ");
-    cy.tearDown();
   });
 
   it("Rename A PlayList Test", () => {
@@ -57,6 +59,22 @@ describe("Main Page Features", () => {
     mainPage.successUpdatedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
     expect(updatedPlayList, playListName);
     cy.log(" =====> " + updatedPlayList + " <===== ");
-    cy.tearDown();
+  });
+
+  it("Delete A PlayList Test", () => {
+    loginPage = new LoginPage();
+    mainPage = new MainPage();
+
+    const email = koelData.loginPage.email;
+    const password = koelData.loginPage.password;
+    const playListName = faker.company.name();
+    const greenUpdatedPopUpMsg = koelData.mainPage.greenDeletedPopUp;
+
+    loginPage.login(email, password);
+    cy.wait(1000);
+    deletedPlayList = mainPage.deletePlayList(updatedPlayList);
+    mainPage.successDeletedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
+    expect(deletedPlayList, updatedPlayList);
+    cy.log(" =====> " + deletedPlayList + " <===== ");
   });
 });

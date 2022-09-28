@@ -51,6 +51,31 @@ class MainPage {
     });
   }
 
+  // Delete an Existing Playlist:
+  deletePlayList(updatedPlayList) {
+    cy.get("#playlists ul li a").each((ele, index) => {
+      let playListNames = ele.text();
+      cy.log(playListNames);
+      if (updatedPlayList.includes(playListNames)) {
+        cy.get("#playlists ul li").eq(index).rightclick({ metaKey: true });
+        cy.wait(1000);
+        cy.get(
+          "nav[class='menu playlist-item-menu'] ul li:nth-of-type(2)"
+        ).click();
+      }
+    });
+    return updatedPlayList;
+  }
+
+  // Get Success Message:
+  successDeletedGreenPopUp(message, playListName) {
+    cy.get(".success").then((el) => {
+      const txt = el.text();
+      cy.log(txt);
+      expect(txt).includes(message + " " + '"' + playListName + '."');
+    });
+  }
+
   // Get URL:
   getURL() {
     cy.on("url:changed", (newUrl) => {
