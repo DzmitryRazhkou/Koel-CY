@@ -28,13 +28,13 @@ describe("Main Page Features", () => {
     const password = koelData.loginPage.password;
     const textmainPageValidation = koelData.mainPage.validateMainPage;
     const playListName = faker.company.name();
-    const greenPopUpMsg = koelData.mainPage.greenPopUp;
+    const greenCreatedPopUpMsg = koelData.mainPage.greenCreatedPopUp;
 
     loginPage.validateTitlePage(titlePage);
     loginPage.login(email, password);
     mainPage.validateMainPage(textmainPageValidation);
     receivedPlaylistName = mainPage.createNewPlayList(playListName);
-    mainPage.successGreenPopUp(greenPopUpMsg);
+    mainPage.successCreatedGreenPopUp(greenCreatedPopUpMsg, playListName);
     cy.log(" =====> " + receivedPlaylistName + " <===== ");
     cy.tearDown();
   });
@@ -46,14 +46,17 @@ describe("Main Page Features", () => {
     const email = koelData.loginPage.email;
     const password = koelData.loginPage.password;
     const playListName = faker.company.name();
+    const greenUpdatedPopUpMsg = koelData.mainPage.greenUpdatedPopUp;
 
     loginPage.login(email, password);
-    cy.wait(1000);
+    cy.wait(500);
     updatedPlayList = mainPage.renamePlayList(
       playListName,
       receivedPlaylistName
     );
+    mainPage.successUpdatedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
     expect(updatedPlayList, playListName);
     cy.log(" =====> " + updatedPlayList + " <===== ");
+    cy.tearDown();
   });
 });

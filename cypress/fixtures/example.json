@@ -9,6 +9,7 @@
   },
   "mainPage": {
     "validateMainPage": "Home",
-    "greenPopUp": "Created playlist"
+    "greenCreatedPopUp": "Created playlist",
+    "greenUpdatedPopUp": "Updated playlist"
   }
 }

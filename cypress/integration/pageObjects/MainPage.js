@@ -17,6 +17,15 @@ class MainPage {
     return playListName;
   }
 
+  // Get Success Message:
+  successCreatedGreenPopUp(message, playListName) {
+    cy.get(".success").then((el) => {
+      const txt = el.text();
+      cy.log(txt);
+      expect(txt).includes(message + " " + '"' + playListName + '."');
+    });
+  }
+
   // Rename an Existing Playlist:
   renamePlayList(playListName, receivedPlaylistName) {
     cy.get("#playlists ul li a").each((ele, index) => {
@@ -33,6 +42,15 @@ class MainPage {
     return playListName;
   }
 
+  // Get Success Message:
+  successUpdatedGreenPopUp(message, playListName) {
+    cy.get(".success").then((el) => {
+      const txt = el.text();
+      cy.log(txt);
+      expect(txt).includes(message + " " + '"' + playListName + '."');
+    });
+  }
+
   // Get URL:
   getURL() {
     cy.on("url:changed", (newUrl) => {
@@ -40,15 +58,6 @@ class MainPage {
       const playListId = urlSplit[5];
       cy.log(playListId);
       return playListId;
-    });
-  }
-
-  // Get Success Message:
-  successGreenPopUp(message) {
-    cy.get(".success").then((el) => {
-      const txt = el.text();
-      cy.log(txt);
-      expect(txt).includes(message);
     });
   }
 }
