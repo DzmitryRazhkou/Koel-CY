@@ -76,6 +76,38 @@ class MainPage {
     });
   }
 
+  // Proceed to All Songs:
+  getAllSongs() {
+    cy.get("ul[class='menu'] li:nth-of-type(3)").as("allSongs");
+
+    cy.get("@allSongs").click();
+  }
+
+  // Get Particular Song:
+  getCertainSong(songName, playList) {
+    cy.get("td[class='title']").as("songs");
+    cy.get("tr[class='song-item']").as("wholeRow");
+
+    cy.get("@songs").each((ele, index) => {
+      let songTitleText = ele.text();
+      if (songTitleText.includes(songName)) {
+        cy.get("@wholeRow").eq(index).rightclick({ metaKey: true });
+
+        cy.get("li[class='has-sub']").as("addTo");
+        cy.get("@addTo").trigger("mouseenter");
+
+        cy.get("ul[class='menu submenu menu-add-to'] li").as("playLists");
+
+        cy.get("@playLists").each((ele, index) => {
+          let playListText = ele.text();
+          if (playListText.includes(playList)) {
+            cy.get("@playLists").eq(index).click();
+          }
+        });
+      }
+    });
+  }
+
   // Get URL:
   getURL() {
     cy.on("url:changed", (newUrl) => {

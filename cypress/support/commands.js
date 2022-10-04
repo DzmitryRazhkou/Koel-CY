@@ -31,6 +31,10 @@ Cypress.Commands.add("createPlayList", (playListName) => {
   return cy.wrap(createNewPlayList(playListName));
 });
 
+//
+//
+//
+
 function createNewPlayList(playListName) {
   cy.get("i[title='Create a new playlist']").click(); // click On The Plus
   cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)").click(); // click On The New PlayList

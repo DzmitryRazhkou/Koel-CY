@@ -61,7 +61,27 @@ describe("Main Page Features", () => {
     cy.log(" =====> " + updatedPlayList + " <===== ");
   });
 
-  it("Delete A PlayList Test", () => {
+  it("Proceed Thru Songs And Add To Playlist Test", () => {
+    loginPage = new LoginPage();
+    mainPage = new MainPage();
+
+    const email = koelData.loginPage.email;
+    const password = koelData.loginPage.password;
+    const playListName = faker.company.name();
+    const greenUpdatedPopUpMsg = koelData.mainPage.greenUpdatedPopUp;
+
+    loginPage.login(email, password);
+    cy.wait(500);
+    mainPage.getAllSongs();
+    mainPage.getCertainSong("Ketsa - Red-Light", updatedPlayList);
+    cy.wait(5000);
+
+    // mainPage.successUpdatedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
+    // expect(updatedPlayList, playListName);
+    // cy.log(" =====> " + updatedPlayList + " <===== ");
+  });
+
+  it.skip("Delete A PlayList Test", () => {
     loginPage = new LoginPage();
     mainPage = new MainPage();
 
