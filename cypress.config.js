@@ -11,7 +11,7 @@ module.exports = defineConfig({
     url: "https://bbb.testpro.io",
   },
   retries: {
-    runMode: 1,
+    runMode: 2,
   },
 
   e2e: {

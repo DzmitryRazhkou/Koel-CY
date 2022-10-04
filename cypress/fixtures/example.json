@@ -11,6 +11,8 @@
     "validateMainPage": "Home",
     "greenCreatedPopUp": "Created playlist",
     "greenUpdatedPopUp": "Updated playlist",
-    "greenDeletedPopUp": "Deleted playlist"
+    "greenDeletedPopUp": "Deleted playlist",
+    "songName": "Ketsa - Red-Light",
+    "greenAddedToPopUp": "Added 1 song into"
   }
 }

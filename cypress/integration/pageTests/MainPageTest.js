@@ -51,7 +51,7 @@ describe("Main Page Features", () => {
     const greenUpdatedPopUpMsg = koelData.mainPage.greenUpdatedPopUp;
 
     loginPage.login(email, password);
-    cy.wait(500);
+    cy.wait(1000);
     updatedPlayList = mainPage.renamePlayList(
       playListName,
       receivedPlaylistName
@@ -67,27 +67,24 @@ describe("Main Page Features", () => {
 
     const email = koelData.loginPage.email;
     const password = koelData.loginPage.password;
-    const playListName = faker.company.name();
-    const greenUpdatedPopUpMsg = koelData.mainPage.greenUpdatedPopUp;
+    const songName = koelData.mainPage.songName;
+    const greenAddedToPopUpMsg = koelData.mainPage.greenAddedToPopUp;
 
     loginPage.login(email, password);
-    cy.wait(500);
+    cy.wait(1000);
     mainPage.getAllSongs();
-    mainPage.getCertainSong("Ketsa - Red-Light", updatedPlayList);
-    cy.wait(5000);
-
-    // mainPage.successUpdatedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
-    // expect(updatedPlayList, playListName);
-    // cy.log(" =====> " + updatedPlayList + " <===== ");
+    mainPage.getCertainSongAddToPlaylist(songName, updatedPlayList);
+    mainPage.reachOutPlaylist(updatedPlayList);
+    mainPage.successAddedToGreenPopUp(greenAddedToPopUpMsg, updatedPlayList);
+    mainPage.validateAddedToSong(songName);
   });
 
-  it.skip("Delete A PlayList Test", () => {
+  it("Delete A PlayList Test", () => {
     loginPage = new LoginPage();
     mainPage = new MainPage();
 
     const email = koelData.loginPage.email;
     const password = koelData.loginPage.password;
-    const playListName = faker.company.name();
     const greenUpdatedPopUpMsg = koelData.mainPage.greenDeletedPopUp;
 
     loginPage.login(email, password);
