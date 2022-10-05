@@ -35,6 +35,8 @@ describe("Main Page Features", () => {
 
     loginPage.validateTitlePage(titlePage);
     loginPage.login(email, password);
+    cy.wait(1000);
+
     mainPage.validateMainPage(textmainPageValidation);
     receivedPlaylistName = mainPage.createNewPlayList(playListName);
     mainPage.successCreatedGreenPopUp(greenCreatedPopUpMsg, playListName);
@@ -52,6 +54,7 @@ describe("Main Page Features", () => {
 
     loginPage.login(email, password);
     cy.wait(1000);
+
     updatedPlayList = mainPage.renamePlayList(
       playListName,
       receivedPlaylistName
@@ -93,5 +96,32 @@ describe("Main Page Features", () => {
     mainPage.successDeletedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
     expect(deletedPlayList, updatedPlayList);
     cy.log(" =====> " + deletedPlayList + " <===== ");
+  });
+
+  it("Set Up Equalizer Test", () => {
+    loginPage = new LoginPage();
+    mainPage = new MainPage();
+
+    const email = koelData.loginPage.email;
+    const password = koelData.loginPage.password;
+    const range = String(mainPage.randomIntFromInterval(1, 13));
+
+    loginPage.login(email, password);
+    cy.wait(1000);
+    mainPage.showEqualizer();
+    mainPage.selectGenres(range);
+  });
+
+  it("Open Info Bar Test", () => {
+    loginPage = new LoginPage();
+    mainPage = new MainPage();
+
+    const email = koelData.loginPage.email;
+    const password = koelData.loginPage.password;
+
+    loginPage.login(email, password);
+    cy.wait(1000);
+    mainPage.clickOnInfo();
+    mainPage.getInfoBar();
   });
 });

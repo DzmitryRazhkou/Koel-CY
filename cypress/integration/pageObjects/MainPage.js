@@ -1,6 +1,8 @@
 class MainPage {
   validateMainPage(txt) {
-    cy.get(".home").should("have.text", txt);
+    cy.get(".home").as("home");
+
+    cy.get("@home").should("have.text", txt);
     cy.log(" =====> " + txt + " <===== ");
   }
 
@@ -9,17 +11,23 @@ class MainPage {
   */
 
   createNewPlayList(playListName) {
-    cy.get("i[title='Create a new playlist']").click(); // click On The Plus
-    cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)").click(); // click On The New PlayList
-    cy.get("form[class='create']")
-      .find("input")
-      .type(playListName)
-      .type("{enter}"); // Type A name into field
+    cy.get("i[title='Create a new playlist']").as("plusButton");
+    cy.get("@plusButton").click();
+
+    cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)").as(
+      "newPlaylist"
+    );
+    cy.get("@newPlaylist").click();
+
+    cy.get("form[class='create'] input").as("playListField");
+    cy.get("@playListField").type(playListName).type("{enter}");
     return playListName;
   }
 
   successCreatedGreenPopUp(message, playListName) {
-    cy.get(".success").then((el) => {
+    cy.get(".success").as("popUp");
+
+    cy.get("@popUp").then((el) => {
       const txt = el.text();
       cy.log(txt);
       expect(txt).includes(message + " " + '"' + playListName + '."');
@@ -31,10 +39,14 @@ class MainPage {
   */
 
   renamePlayList(playListName, receivedPlaylistName) {
-    cy.get("#playlists ul li a").each((ele, index) => {
+    cy.get("#playlists ul li a").as("playLists");
+
+    cy.get("@playLists").each((ele, index) => {
       let playListNames = ele.text();
       if (receivedPlaylistName.includes(playListNames)) {
-        cy.get("#playlists ul li")
+        cy.get("#playlists ul li").as("list");
+
+        cy.get("@list")
           .eq(index)
           .dblclick()
           .type("{selectall}{del}")
@@ -46,7 +58,9 @@ class MainPage {
   }
 
   successUpdatedGreenPopUp(message, playListName) {
-    cy.get(".success").then((el) => {
+    cy.get(".success").as("popUp");
+
+    cy.get("@popUp").then((el) => {
       const txt = el.text();
       cy.log(txt);
       expect(txt).includes(message + " " + '"' + playListName + '."');
@@ -156,6 +170,45 @@ class MainPage {
       const playListId = urlSplit[5];
       cy.log(playListId);
       return playListId;
+    });
+  }
+
+  /*
+  Set Up Equalizer Feature:
+  */
+
+  showEqualizer() {
+    cy.get("button[class='control equalizer'] i").as("equalizer");
+
+    cy.get("@equalizer").scrollIntoView();
+    cy.get("@equalizer").click();
+  }
+
+  selectGenres(genre) {
+    cy.get("label[class='select-wrapper']").find("select").as("genres");
+
+    cy.get("@genres").select(genre).should("have.value", genre);
+    cy.wait(1000);
+  }
+
+  randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  /*
+  Get Infobar Feature:
+  */
+
+  clickOnInfo() {
+    cy.get("button[title='View song information']").as("info");
+    cy.get("@info").scrollIntoView();
+  }
+
+  getInfoBar() {
+    cy.get("div[role='tablist'] button:nth-child(1)").as("infoBar");
+    cy.get("@infoBar").then((ele) => {
+      const infoBarText = ele.text();
+      cy.log(" =====> " + infoBarText + " <===== ");
     });
   }
 }
