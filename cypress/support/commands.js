@@ -34,20 +34,21 @@ Cypress.Commands.add("createPlayList", (playListName) => {
 //
 //
 //
-
-function createNewPlayList(playListName) {
-  cy.get("i[title='Create a new playlist']").click(); // click On The Plus
-  cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)").click(); // click On The New PlayList
-  cy.get("form[class='create']")
-    .find("input")
-    .type(playListName)
-    .type("{enter}"); // Type A neme into field
-  return playListName;
-}
-
 //
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })
+
+Cypress.Commands.add("token", () => {
+  cy.request("POST", "https://bbb.testpro.io/api/me", {
+    email: "dimagadjilla@gmail.com",
+    password: "te$t$tudent",
+    failOnStatus: false,
+  }).then((response) => {
+    expect(response.status).to.equal(200);
+    Cypress.env("api-token", response.body.token);
+  });
+});
+
 //
 // -- This is a child command --
 // Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
@@ -59,3 +60,61 @@ function createNewPlayList(playListName) {
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+//
+//
+//
+
+// Resolved:
+
+Cypress.Commands.add("launchPage", () => {
+  cy.visit(Cypress.env("url"), {
+    onBeforeLoad: (window) => {
+      window.localStorage.setItem("api-token", Cypress.env("api-token"));
+    },
+  });
+});
+
+//
+
+Cypress.Commands.add("createPlaylistAPI", (playListName, token) => {
+  cy.request({
+    method: "POST",
+    url: "https://bbb.testpro.io/api/playlist",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    body: {
+      name: playListName,
+      songs: [],
+      rules: null,
+    },
+  }).then((res) => {
+    cy.log(JSON.stringify(res));
+
+    expect(res).to.have.property("status", 200);
+    expect(res.body).to.not.be.null;
+    expect(res.body).to.has.property("name", playListName);
+    let playlistID = res.body.id;
+    cy.log(" =====> " + playlistID + " <===== ");
+
+    let playlistName = res.body.name;
+    cy.log(" =====> " + playlistName + " <===== ");
+  });
+});
+
+//
+
+Cypress.Commands.add("getToken", () => {
+  cy.request({
+    method: "POST",
+    url: "https://bbb.testpro.io/api/me",
+    body: {
+      email: "dimagadjilla@gmail.com",
+      password: "te$t$tudent",
+    },
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+    Cypress.env("api-token", response.body.token);
+  });
+});

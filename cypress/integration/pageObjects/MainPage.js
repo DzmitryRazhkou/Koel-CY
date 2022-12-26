@@ -34,6 +34,43 @@ class MainPage {
     });
   }
 
+  createNewPlayListThruAPI(token, name) {
+    cy.request({
+      method: "POST",
+      url: "https://bbb.testpro.io/api/playlist",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: {
+        name: name,
+        songs: [],
+        rules: null,
+      },
+    }).then((res) => {
+      cy.log(JSON.stringify(res));
+
+      expect(res).to.have.property("status", 200);
+      expect(res.body).to.not.be.null;
+      expect(res.body).to.has.property("name", name);
+      let playlistID = res.body.id;
+      cy.log(" =====> " + playlistID + " <===== ");
+
+      let playlistName = res.body.name;
+      cy.log(" =====> " + playlistName + " <===== ");
+    });
+  }
+
+  validateCreatedPlayList(createdPlayList) {
+    cy.get("#playlists ul li a").as("listOfPlaylists");
+
+    cy.get("@listOfPlaylists").each((ele) => {
+      let playListNames = ele.text();
+      if (createdPlayList.includes(playListNames)) {
+      }
+    });
+    return createdPlayList;
+  }
+
   /*
   Rename PlayList Feature:
   */

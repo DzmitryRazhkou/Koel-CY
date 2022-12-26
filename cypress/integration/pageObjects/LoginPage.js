@@ -1,4 +1,18 @@
 class LoginPage {
+  /*
+  Login API Call:
+  */
+
+  loginThruAPICall() {
+    cy.token().then(() => {
+      cy.visit(Cypress.env("url"), {
+        onBeforeLoad: (window) => {
+          window.localStorage.setItem("api-token", Cypress.env("api-token"));
+        },
+      });
+    });
+  }
+
   // Get Title Page:
   validateTitlePage(titlePage) {
     cy.title().should("equal", titlePage);
