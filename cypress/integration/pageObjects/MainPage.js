@@ -1,4 +1,6 @@
 class MainPage {
+  mainPageLocators = {};
+
   validateMainPage(txt) {
     cy.get(".home").as("home");
 

@@ -22,7 +22,7 @@ describe("Main Page Features", () => {
     cy.tearDown();
   });
 
-  it("Create A New PlayList Test", () => {
+  it.only("Create A New PlayList Test", () => {
     loginPage = new LoginPage();
     mainPage = new MainPage();
 

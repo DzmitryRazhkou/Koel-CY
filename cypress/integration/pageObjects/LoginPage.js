@@ -1,4 +1,15 @@
 class LoginPage {
+  loginPageLocators = {
+    EMAIL_FIELD: () => cy.get("input[type='email']"),
+    PSW_FIELD: () => cy.get("input[type='password']"),
+    LOGIN_BTN: () => cy.get("button"),
+    ERROR_FRAME: () => cy.get(".error"),
+    REGISTRATION_BTN: () => cy.get("#hel"),
+    EMAIL_FIELD_REGISTRATION_PAGE: () => cy.get("#email"),
+    REGISTER_BTN: () => cy.get("#button"),
+    REGISTRATION_SUCCESSFULL_MSG: () => cy.get("h3"),
+  };
+
   /*
   Login API Call:
   */
@@ -22,42 +33,43 @@ class LoginPage {
 
   //   Login:
   login(email, password) {
-    cy.get("input[type='email']").as("emailField");
-    cy.get("input[type='password']").as("password");
-    cy.get("button").as("signIn");
+    this.loginPageLocators.EMAIL_FIELD().as("emailField");
+    this.loginPageLocators.PSW_FIELD().as("password");
+    this.loginPageLocators.LOGIN_BTN().as("signIn");
 
     cy.get("@emailField").type(email).should("have.value", email);
     cy.get("@password").type(password).should("have.value", password);
-    cy.get("@signIn").click();
+    cy.get("@signIn").should("be.visible").click();
   }
 
   // Error Frame:
   errorFrame() {
-    cy.get(".error").as("errorFrame");
-
+    this.loginPageLocators.ERROR_FRAME().as("errorFrame");
     cy.get("@errorFrame").should("have.class", "error");
   }
 
   // Registration:
   register(email) {
-    cy.get("#hel").as("registrationBtn");
+    this.loginPageLocators.REGISTRATION_BTN().as("registrationBtn");
     cy.get("@registrationBtn").click();
 
-    cy.get("#email").as("email");
+    this.loginPageLocators.EMAIL_FIELD_REGISTRATION_PAGE().as("email");
     cy.get("@email").type(email).should("have.value", email);
 
-    cy.get("#button").as("registerBtn");
-    cy.get("@registerBtn").click();
+    this.loginPageLocators.REGISTER_BTN().as("registerBtn");
+    cy.get("@registerBtn").should("be.visible").click();
   }
 
   // Validate Restration:
-  validateRegister(successMessage) {
-    cy.get("h3").as("successfulMessage");
+  validateRegisteration(successMessage) {
+    this.loginPageLocators
+      .REGISTRATION_SUCCESSFULL_MSG()
+      .as("successfulMessage");
 
     cy.get("@successfulMessage").then((el) => {
       const msg = el.text();
       cy.log(" =====> " + msg + " <===== ");
-      expect(msg).includes(successMessage);
+      expect(msg).to.be.include(successMessage);
     });
   }
 }

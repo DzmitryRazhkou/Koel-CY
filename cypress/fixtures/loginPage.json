@@ -1,0 +1,10 @@
+{
+  "loginPage": {
+    "pageTitle": "Koel",
+    "email": "dimagadjilla@gmail.com",
+    "password": "te$t$tudent",
+    "wrongEmail": "dimagadjilla_@gmail.com",
+    "wrongPassword": "te$t_$tudent",
+    "message": "Registration Successful"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "loginPage": {
+    "pageTitle": "Koel",
+    "email": "dimagadjilla@gmail.com",
+    "password": "te$t$tudent",
+    "wrongEmail": "dimagadjilla_@gmail.com",
+    "wrongPassword": "te$t_$tudent",
+    "message": "Registration Successful"
+  },
+  "mainPage": {
+    "validateMainPage": "Home",
+    "greenCreatedPopUp": "Created playlist",
+    "greenUpdatedPopUp": "Updated playlist",
+    "greenDeletedPopUp": "Deleted playlist",
+    "songName": "Ketsa - Red-Light",
+    "greenAddedToPopUp": "Added 1 song into"
+  }
+}

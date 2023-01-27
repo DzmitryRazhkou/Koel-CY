@@ -1,17 +1,26 @@
+import { faker } from "@faker-js/faker";
 import LoginPage from "../pageObjects/LoginPage";
 import MainPage from "../pageObjects/MainPage";
-import { faker } from "@faker-js/faker";
 
-describe("LoginPage Features", () => {
-  let koelData;
-  let loginPage;
-  let mainPage;
+const loginPage = new LoginPage();
+const mainPage = new MainPage();
 
-  before(() => {
+let koelLoginPage;
+let koelMainPage;
+
+describe("KOEL Login Page Features", () => {
+  beforeEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookies();
     cy.launch();
-    cy.fixture("example").then((data) => {
-      koelData = data;
-      return koelData;
+
+    cy.fixture("loginPage").then((data) => {
+      koelLoginPage = data;
+      return koelLoginPage;
+    });
+    cy.fixture("mainPage").then((data) => {
+      koelMainPage = data;
+      return koelMainPage;
     });
   });
 
@@ -19,19 +28,16 @@ describe("LoginPage Features", () => {
     // cy.tearDown();
   });
 
-  it("Login With Correct Credentials Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
-
-    const titlePage = koelData.loginPage.pageTitle;
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
-    const textmainPageValidation = koelData.mainPage.validateMainPage;
+  it.only("Login With Correct Credentials Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const textmainPageValidation = koelMainPage.mainPage.validateMainPage;
 
     loginPage.validateTitlePage(titlePage);
     loginPage.login(email, password);
     mainPage.validateMainPage(textmainPageValidation);
-    cy.tearDown();
+    // cy.tearDown();
   });
 
   it("Login With Incorrect Credentials Test", () => {
@@ -47,15 +53,13 @@ describe("LoginPage Features", () => {
     loginPage.errorFrame();
   });
 
-  it("Register A New Student Test", () => {
-    loginPage = new LoginPage();
-
-    const titlePage = koelData.loginPage.pageTitle;
-    const msg = koelData.loginPage.message;
+  it.only("Register A New Student Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const msg = koelLoginPage.loginPage.message;
     const email = faker.internet.email();
 
     loginPage.validateTitlePage(titlePage);
     loginPage.register(email);
-    loginPage.validateRegister(msg);
+    loginPage.validateRegisteration(msg);
   });
 });
