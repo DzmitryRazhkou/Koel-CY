@@ -5,7 +5,7 @@ class MainPage {
     cy.get(".home").as("home");
 
     cy.get("@home").should("have.text", txt);
-    cy.log(" =====> " + txt + " <===== ");
+    cy.log(" =====> " + txt.toUpperCase() + " <===== ");
   }
 
   /*

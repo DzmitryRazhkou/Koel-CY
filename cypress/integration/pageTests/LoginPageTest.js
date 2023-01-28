@@ -24,36 +24,91 @@ describe("KOEL Login Page Features", () => {
     });
   });
 
-  after(() => {
-    // cy.tearDown();
-  });
-
-  it.only("Login With Correct Credentials Test", () => {
+  it("AT_001 - Login With Correct Credentials Test", () => {
     const titlePage = koelLoginPage.loginPage.pageTitle;
     const email = koelLoginPage.loginPage.email;
     const password = koelLoginPage.loginPage.password;
     const textmainPageValidation = koelMainPage.mainPage.validateMainPage;
 
     loginPage.validateTitlePage(titlePage);
-    loginPage.login(email, password);
+    loginPage.doLogin(email, password);
     mainPage.validateMainPage(textmainPageValidation);
-    // cy.tearDown();
   });
 
-  it("Login With Incorrect Credentials Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
+  it("AT_002 - Login With Correct Credentials Thru API POST Call Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
+    const textmainPageValidation = koelMainPage.mainPage.validateMainPage;
 
-    const titlePage = koelData.loginPage.pageTitle;
-    const email = koelData.loginPage.wrongEmail;
-    const password = koelData.loginPage.wrongPassword;
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    mainPage.validateMainPage(textmainPageValidation);
+  });
+
+  it("AT_003 - Mock API GET Call After Successfull Login Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+
+    const method = koelLoginPage.loginPage.method;
+    const endPoint = koelLoginPage.loginPage.endPoint;
+    const fixture = koelLoginPage.loginPage.fixture;
+
+    loginPage.doLogin(email, password);
+    loginPage.intercept(method, endPoint, fixture);
+  });
+
+  it("AT_004 - Login With Email Without '@' and Right Password Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const length = koelLoginPage.loginPage.length;
+    const email = loginPage.generateString(length);
+    const password = koelLoginPage.loginPage.wrongPassword;
 
     loginPage.validateTitlePage(titlePage);
-    loginPage.login(email, password);
+    loginPage.doLogin(email, password);
+  });
+
+  it("AT_005 - Login With Correct Email and Wrong Password Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const length = koelLoginPage.loginPage.length;
+    const email = loginPage.generateString(length);
+    const password = loginPage.generateString(length);
+
+    loginPage.validateTitlePage(titlePage);
+    loginPage.doLogin(email, password);
+  });
+
+  it("AT_006 - Login With Correct Email and Right Password Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const email = faker.internet.email();
+    const password = koelLoginPage.loginPage.wrongPassword;
+
+    loginPage.validateTitlePage(titlePage);
+    loginPage.doLogin(email, password);
     loginPage.errorFrame();
   });
 
-  it.only("Register A New Student Test", () => {
+  it("AT_007 - Login With Correct Email and Wrong Password Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const length = koelLoginPage.loginPage.length;
+    const email = koelLoginPage.loginPage.email;
+    const password = loginPage.generateString(length);
+
+    loginPage.validateTitlePage(titlePage);
+    loginPage.doLogin(email, password);
+    loginPage.errorFrame();
+  });
+
+  it("AT_008 - Login With Incorrect Credentials Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const email = koelLoginPage.loginPage.wrongEmail;
+    const password = koelLoginPage.loginPage.wrongPassword;
+
+    loginPage.validateTitlePage(titlePage);
+    loginPage.doLogin(email, password);
+    loginPage.errorFrame();
+  });
+
+  it("AT_009 - Register A New Student Test", () => {
     const titlePage = koelLoginPage.loginPage.pageTitle;
     const msg = koelLoginPage.loginPage.message;
     const email = faker.internet.email();
@@ -61,5 +116,28 @@ describe("KOEL Login Page Features", () => {
     loginPage.validateTitlePage(titlePage);
     loginPage.register(email);
     loginPage.validateRegisteration(msg);
+  });
+
+  it("AT_010 - Login and Log Out Using GUI Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+
+    loginPage.doLogin(email, password);
+    loginPage.doLogOut();
+    loginPage.validateTitlePage(titlePage);
+  });
+
+  it("AT_011 - Login and Log Out Using API Test", () => {
+    const titlePage = koelLoginPage.loginPage.pageTitle;
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
+    const textmainPageValidation = koelMainPage.mainPage.validateMainPage;
+
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    mainPage.validateMainPage(textmainPageValidation);
+    loginPage.doLogOutThruAPI();
+    loginPage.validateTitlePage(titlePage);
   });
 });

@@ -5,6 +5,12 @@
     "password": "te$t$tudent",
     "wrongEmail": "dimagadjilla_@gmail.com",
     "wrongPassword": "te$t_$tudent",
-    "message": "Registration Successful"
+    "message": "Registration Successful",
+    "method": "GET",
+    "endPoint": "api/data",
+    "fixture": "interceptGETLogin.json",
+    "length": 2,
+    "ok": 200,
+    "notFound": "401 Unauthorized"
   }
 }

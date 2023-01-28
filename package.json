@@ -12,7 +12,9 @@
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
     "cypress": "^12.2.0",
+    "cypress-html-validate": "^5.1.2",
     "cypress-iframe": "^1.0.1",
+    "html-validate": "^7.13.1",
     "mochawesome": "^7.1.3"
   }
 }
