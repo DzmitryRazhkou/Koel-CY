@@ -2,46 +2,55 @@ import LoginPage from "../pageObjects/LoginPage";
 import MainPage from "../pageObjects/MainPage";
 import { faker } from "@faker-js/faker";
 
-describe("Main Page Features", () => {
-  let koelData;
-  let loginPage;
-  let mainPage;
-  let receivedPlaylistName;
-  let updatedPlayList;
-  let deletedPlayList;
+const loginPage = new LoginPage();
+const mainPage = new MainPage();
 
+let koelMainPage;
+let koelLoginPage;
+
+let receivedPlaylistName;
+let updatedPlayList;
+let deletedPlayList;
+
+describe("KOEL Main Page Features", () => {
   beforeEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookies();
     cy.launch();
-    cy.fixture("example").then((data) => {
-      koelData = data;
-      return koelData;
+
+    cy.fixture("loginPage").then((data) => {
+      koelLoginPage = data;
+      return koelLoginPage;
+    });
+    cy.fixture("mainPage").then((data) => {
+      koelMainPage = data;
+      return koelMainPage;
     });
   });
 
-  afterEach(() => {
-    cy.tearDown();
+  it("AT_015 - Validate KOEL Main Page Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
+    const textMainPageValidation = koelMainPage.mainPage.validateMainPage;
+
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    mainPage.validateMainPage(textMainPageValidation);
   });
 
-  it.only("Create A New PlayList Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
-
-    const titlePage = koelData.loginPage.pageTitle;
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
-    const textmainPageValidation = koelData.mainPage.validateMainPage;
+  it("AT_016 - Create A New PlayList Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
     const playListName = faker.company.name();
-    const greenCreatedPopUpMsg = koelData.mainPage.greenCreatedPopUp;
+    const greenCreatedPopUpMsg = koelMainPage.mainPage.greenCreatedPopUp;
 
-    loginPage.validateTitlePage(titlePage);
-    loginPage.login(email, password);
-    cy.wait(1000);
-
-    mainPage.validateMainPage(textmainPageValidation);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
     receivedPlaylistName = mainPage.createNewPlayList(playListName);
     mainPage.successCreatedGreenPopUp(greenCreatedPopUpMsg, playListName);
-    cy.log(" =====> " + receivedPlaylistName + " <===== ");
   });
+
+  it.only("DB", () => {});
 
   it("Rename A PlayList Test", () => {
     loginPage = new LoginPage();

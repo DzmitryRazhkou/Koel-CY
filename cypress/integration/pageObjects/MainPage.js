@@ -1,33 +1,35 @@
 class MainPage {
-  mainPageLocators = {};
+  mainPageLocators = {
+    HOME_BTN: () => cy.get(".home"),
+    CREATE_NEW_PLAYLIST_PLUS_BTN: () =>
+      cy.get("i[title='Create a new playlist']"),
+    NEW_PLAYLIST: () =>
+      cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)"),
+    NEW_PLAYLIST_FIELD: () => cy.get("form[class='create'] input"),
+    GREEN_POPUP: () => cy.get(".success"),
+  };
 
   validateMainPage(txt) {
-    cy.get(".home").as("home");
+    this.mainPageLocators.HOME_BTN().as("home");
 
     cy.get("@home").should("have.text", txt);
     cy.log(" =====> " + txt.toUpperCase() + " <===== ");
   }
 
-  /*
-  Create PlayList Feature:
-  */
-
   createNewPlayList(playListName) {
-    cy.get("i[title='Create a new playlist']").as("plusButton");
+    this.mainPageLocators.CREATE_NEW_PLAYLIST_PLUS_BTN().as("plusButton");
     cy.get("@plusButton").click();
 
-    cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)").as(
-      "newPlaylist"
-    );
+    this.mainPageLocators.NEW_PLAYLIST().as("newPlaylist");
     cy.get("@newPlaylist").click();
 
-    cy.get("form[class='create'] input").as("playListField");
+    this.mainPageLocators.NEW_PLAYLIST_FIELD().as("playListField");
     cy.get("@playListField").type(playListName).type("{enter}");
     return playListName;
   }
 
   successCreatedGreenPopUp(message, playListName) {
-    cy.get(".success").as("popUp");
+    this.mainPageLocators.GREEN_POPUP().as("popUp");
 
     cy.get("@popUp").then((el) => {
       const txt = el.text();
