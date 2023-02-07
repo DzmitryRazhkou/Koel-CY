@@ -42,26 +42,28 @@ describe("KOEL Main Page Features", () => {
     const email = koelLoginPage.loginPage.email;
     const password = koelLoginPage.loginPage.password;
     const responseCodeOk = koelLoginPage.loginPage.ok;
+
     const playListName = faker.company.name();
+    const user_id = koelMainPage.mainPage.user_id;
+
     const greenCreatedPopUpMsg = koelMainPage.mainPage.greenCreatedPopUp;
 
     loginPage.doLoginThruAPICall(email, password, responseCodeOk);
     receivedPlaylistName = mainPage.createNewPlayList(playListName);
     mainPage.successCreatedGreenPopUp(greenCreatedPopUpMsg, playListName);
+    mainPage.doQueryDBCall(user_id, playListName);
   });
 
-  it.only("DB", () => {});
+  it("AT_017 - Rename A PlayList Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
 
-  it("Rename A PlayList Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
-
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
     const playListName = faker.company.name();
-    const greenUpdatedPopUpMsg = koelData.mainPage.greenUpdatedPopUp;
+    const user_id = koelMainPage.mainPage.user_id;
+    const greenUpdatedPopUpMsg = koelMainPage.mainPage.greenUpdatedPopUp;
 
-    loginPage.login(email, password);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
     cy.wait(1000);
 
     updatedPlayList = mainPage.renamePlayList(
@@ -70,20 +72,19 @@ describe("KOEL Main Page Features", () => {
     );
     mainPage.successUpdatedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
     expect(updatedPlayList, playListName);
+    mainPage.doQueryDBCall(user_id, updatedPlayList);
     cy.log(" =====> " + updatedPlayList + " <===== ");
   });
 
-  it("Proceed Thru Songs And Add To Playlist Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
+  it("AT_018 - Proceed Thru Songs And Add To Playlist Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
 
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
-    const songName = koelData.mainPage.songName;
-    const greenAddedToPopUpMsg = koelData.mainPage.greenAddedToPopUp;
+    const songName = koelMainPage.mainPage.songName;
+    const greenAddedToPopUpMsg = koelMainPage.mainPage.greenAddedToPopUp;
 
-    loginPage.login(email, password);
-    cy.wait(1000);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
     mainPage.getAllSongs();
     mainPage.getCertainSongAddToPlaylist(songName, updatedPlayList);
     mainPage.reachOutPlaylist(updatedPlayList);
@@ -91,45 +92,41 @@ describe("KOEL Main Page Features", () => {
     mainPage.validateAddedToSong(songName);
   });
 
-  it("Delete A PlayList Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
+  it("AT_019 - Delete A PlayList Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
 
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
-    const greenUpdatedPopUpMsg = koelData.mainPage.greenDeletedPopUp;
+    const user_id = koelMainPage.mainPage.user_id;
+    const greenUpdatedPopUpMsg = koelMainPage.mainPage.greenDeletedPopUp;
 
-    loginPage.login(email, password);
-    cy.wait(1000);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    cy.wait(500);
     deletedPlayList = mainPage.deletePlayList(updatedPlayList);
     mainPage.successDeletedGreenPopUp(greenUpdatedPopUpMsg, updatedPlayList);
     expect(deletedPlayList, updatedPlayList);
-    cy.log(" =====> " + deletedPlayList + " <===== ");
   });
 
-  it("Set Up Equalizer Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
-
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
+  it("AT_020 - Set Up Equalizer Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
     const range = String(mainPage.randomIntFromInterval(1, 13));
 
-    loginPage.login(email, password);
-    cy.wait(1000);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    cy.wait(500);
+
     mainPage.showEqualizer();
     mainPage.selectGenres(range);
   });
 
-  it("Open Info Bar Test", () => {
-    loginPage = new LoginPage();
-    mainPage = new MainPage();
+  it("AT_021 - Open Info Bar Test", () => {
+    const email = koelLoginPage.loginPage.email;
+    const password = koelLoginPage.loginPage.password;
+    const responseCodeOk = koelLoginPage.loginPage.ok;
 
-    const email = koelData.loginPage.email;
-    const password = koelData.loginPage.password;
-
-    loginPage.login(email, password);
-    cy.wait(1000);
+    loginPage.doLoginThruAPICall(email, password, responseCodeOk);
+    cy.wait(500);
     mainPage.clickOnInfo();
     mainPage.getInfoBar();
   });

@@ -1,12 +1,24 @@
 class MainPage {
   mainPageLocators = {
     HOME_BTN: () => cy.get(".home"),
+    PLAYLIST: () => cy.get("#playlists ul li a"),
     CREATE_NEW_PLAYLIST_PLUS_BTN: () =>
       cy.get("i[title='Create a new playlist']"),
     NEW_PLAYLIST: () =>
       cy.get("nav[class='menu playlist-menu'] ul li:nth-child(1)"),
     NEW_PLAYLIST_FIELD: () => cy.get("form[class='create'] input"),
+    ALL_SONGS: () => cy.get("ul[class='menu'] li:nth-of-type(3)"),
+    SONG_TITLE: () => cy.get("td[class='title']"),
+    WHOLE_ROW: () => cy.get("tr[class='song-item']"),
+    ADD_TO: () => cy.get("li[class='has-sub']"),
+    ADD_TO_PLAYLIST: () => cy.get("ul[class='menu submenu menu-add-to'] li"),
+    TITLE_SONG: () =>
+      cy.get("tr[class='song-item selected'] td:nth-of-type(2)"),
+    DELETE: () =>
+      cy.get("nav[class='menu playlist-item-menu'] ul li:last-of-type"),
+    SUBMIT: () => cy.get(".ok"),
     GREEN_POPUP: () => cy.get(".success"),
+    GREEN_POPUP_DELETED: () => cy.get("div[class='success show'"),
   };
 
   validateMainPage(txt) {
@@ -64,8 +76,36 @@ class MainPage {
     });
   }
 
+  doQueryDBCall(user_id, playlist) {
+    cy.task(
+      "queryDb",
+      "SELECT name FROM playlists WHERE user_id = '" +
+        user_id +
+        "' and name = '" +
+        playlist +
+        "'"
+    ).then((results) => {
+      cy.log(
+        " =====> THE PLAYLIST QUERY FROM DATABASE '" +
+          results[0].name +
+          "' <===== "
+      );
+      expect(results[0].name).to.equal(playlist);
+    });
+  }
+
+  doQueryDB_DeleteCall(user_id, playlist) {
+    cy.task(
+      "queryDb",
+      "SELECT name FROM playlists WHERE user_id = '" + user_id + "'"
+    ).then((results) => {
+      cy.log(" =====> THE PLAYLIST HAS BEEN DELETED <===== ");
+      expect(results[0].name).to.eq(playlist);
+    });
+  }
+
   validateCreatedPlayList(createdPlayList) {
-    cy.get("#playlists ul li a").as("listOfPlaylists");
+    this.mainPageLocators.PLAYLIST().as("listOfPlaylists");
 
     cy.get("@listOfPlaylists").each((ele) => {
       let playListNames = ele.text();
@@ -75,12 +115,8 @@ class MainPage {
     return createdPlayList;
   }
 
-  /*
-  Rename PlayList Feature:
-  */
-
   renamePlayList(playListName, receivedPlaylistName) {
-    cy.get("#playlists ul li a").as("playLists");
+    this.mainPageLocators.PLAYLIST().as("playLists");
 
     cy.get("@playLists").each((ele, index) => {
       let playListNames = ele.text();
@@ -99,7 +135,7 @@ class MainPage {
   }
 
   successUpdatedGreenPopUp(message, playListName) {
-    cy.get(".success").as("popUp");
+    this.mainPageLocators.GREEN_POPUP().as("popUp");
 
     cy.get("@popUp").then((el) => {
       const txt = el.text();
@@ -108,29 +144,25 @@ class MainPage {
     });
   }
 
-  /*
-  Add To Playlist Song Feature:
-  */
-
   getAllSongs() {
-    cy.get("ul[class='menu'] li:nth-of-type(3)").as("allSongs");
+    this.mainPageLocators.ALL_SONGS().as("allSongs");
 
     cy.get("@allSongs").click();
   }
 
   getCertainSongAddToPlaylist(songName, playList) {
-    cy.get("td[class='title']").as("songs");
-    cy.get("tr[class='song-item']").as("wholeRow");
+    this.mainPageLocators.SONG_TITLE().as("songs");
+    this.mainPageLocators.WHOLE_ROW().as("wholeRow");
 
     cy.get("@songs").each((ele, index) => {
       let songTitleText = ele.text();
       if (songTitleText.includes(songName)) {
         cy.get("@wholeRow").eq(index).rightclick({ metaKey: true });
 
-        cy.get("li[class='has-sub']").as("addTo");
+        this.mainPageLocators.ADD_TO().as("addTo");
         cy.get("@addTo").trigger("mouseenter");
 
-        cy.get("ul[class='menu submenu menu-add-to'] li").as("playLists");
+        this.mainPageLocators.ADD_TO_PLAYLIST().as("playLists");
 
         cy.get("@playLists").each((ele, index) => {
           let playListText = ele.text();
@@ -143,7 +175,7 @@ class MainPage {
   }
 
   reachOutPlaylist(updatedPlayList) {
-    cy.get("#playlists ul li a").as("listOfPlaylists");
+    this.mainPageLocators.PLAYLIST().as("listOfPlaylists");
 
     cy.get("@listOfPlaylists").each((ele, index) => {
       let playListNames = ele.text();
@@ -162,7 +194,7 @@ class MainPage {
   }
 
   validateAddedToSong(titleSong) {
-    cy.get("tr[class='song-item selected'] td:nth-of-type(2)").as("titleSong");
+    this.mainPageLocators.TITLE_SONG().as("titleSong");
 
     cy.get("@titleSong").then((el) => {
       let title = el.text();
@@ -171,12 +203,8 @@ class MainPage {
     });
   }
 
-  /*
-  Delete Playlist Feature:
-  */
-
   deletePlayList(updatedPlayList) {
-    cy.get("#playlists ul li a").as("listOfPlaylists");
+    this.mainPageLocators.PLAYLIST().as("listOfPlaylists");
 
     cy.get("@listOfPlaylists").each((ele, index) => {
       let playListNames = ele.text();
@@ -184,12 +212,10 @@ class MainPage {
         cy.get("#playlists ul li").eq(index).rightclick({ metaKey: true });
         cy.wait(1000);
 
-        cy.get("nav[class='menu playlist-item-menu'] ul li:last-of-type").as(
-          "delete"
-        );
+        this.mainPageLocators.DELETE().as("delete");
         cy.get("@delete").click();
 
-        cy.get("button[class='ok']").as("submitDelete");
+        this.mainPageLocators.SUBMIT().as("submitDelete");
         cy.get("@submitDelete").click();
       }
     });
@@ -197,7 +223,7 @@ class MainPage {
   }
 
   successDeletedGreenPopUp(message, playListName) {
-    cy.get(".success").then((el) => {
+    this.mainPageLocators.GREEN_POPUP_DELETED().then((el) => {
       const txt = el.text();
       cy.log(txt);
       expect(txt).includes(message + " " + '"' + playListName + '."');
